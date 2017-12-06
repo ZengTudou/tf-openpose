@@ -42,8 +42,7 @@ Pillow=4.3.0
 
 [Instance normalization removed in 0.4.0](https://forums.developer.apple.com/thread/81520)
 
-
-**Relearning or coreml instance_normalization Waiting for support**
+**Relearning or coreml instance_normalization Waiting for support**
 
 ![batch_normalization](resources/batch_normalization.png)
 
