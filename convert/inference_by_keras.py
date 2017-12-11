@@ -21,21 +21,22 @@ test_img_path = "../images/pose.jpg"
 input_height = 368
 input_width = 368
 
-if os.path.exists("output/predict.hd5"):
-    net = load_model('model.h5')
-else:
-    import tensorflow as tf
-    # from convtest4 import get_model
-    from tensorToKeras import get_model
-    config = tf.ConfigProto()
-    with tf.Session(config=config) as sess:
-        net = get_model(sess, input_height, input_width)
-
 im = read_imgfile(test_img_path, 368, 368)
 s = im.shape
 _im = im.reshape(1, s[0], s[1], s[2])
-out = net.predict(_im)
 
+# if os.path.exists("output/predict.hd5"):
+#     from keras.applications.mobilenet import DepthwiseConv2D
+#     from keras.utils.generic_utils import CustomObjectScope
+#     with CustomObjectScope({'DepthwiseConv2D': DepthwiseConv2D}):
+#         net = load_model('output/predict.hd5')
+# else:
+import tensorflow as tf
+from tensorToKeras import get_model
+config = tf.ConfigProto()
+with tf.Session(config=config) as sess:
+    net = get_model(sess, input_height, input_width)
+    out = net.predict(_im)
 
 
 heatMat = out[:, :, :, :19]

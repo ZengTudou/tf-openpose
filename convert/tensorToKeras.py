@@ -227,9 +227,9 @@ def get_model(sess, height, width):
             layers = getTupleLayer(prefix,layer)
             model = setLayer(model,layers)
     
-    if not os.path.exists("output"):
-        os.mkdir("output")
-    model.save('output/predict.hd5')
+    # if not os.path.exists("output"):
+    #     os.mkdir("output")
+    # model.save('output/predict.hd5')
 
     # plot_model(model, to_file='model_shape.png', show_shapes=True)
 
