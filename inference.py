@@ -32,7 +32,7 @@ if __name__ == '__main__':
     input_node = tf.placeholder(tf.float32, shape=(1, args.input_height, args.input_width, 3), name='image')
 
     with tf.Session(config=config) as sess:
-        net, _, last_layer = get_network(args.model, input_node, sess)
+        net, _, last_layer = get_network(args.model, input_node, sess, trainable=False)
 
         logging.debug('read image+')
         image = read_imgfile(args.imgpath, args.input_width, args.input_height)

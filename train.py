@@ -126,7 +126,10 @@ if __name__ == '__main__':
 
     optimizer = tf.train.RMSPropOptimizer(learning_rate, decay=0.0005, momentum=0.9, epsilon=1e-10)
     # optimizer = tf.train.AdadeltaOptimizer(learning_rate)
-    train_op = optimizer.minimize(total_loss, global_step, colocate_gradients_with_ops=True)
+    # train_op = optimizer.minimize(total_loss, global_step, colocate_gradients_with_ops=True)
+    update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+    with tf.control_dependencies(update_ops):
+        train_op = optimizer.minimize(total_loss, global_step, colocate_gradients_with_ops=True)
 
     # define summary
     tf.summary.scalar("loss", total_loss)

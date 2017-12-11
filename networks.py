@@ -12,17 +12,17 @@ def _get_base_path():
     return os.environ.get('OPENPOSE_MODEL')
 
 
-def get_network(type, placeholder_input, sess_for_load=None):
+def get_network(type, placeholder_input, sess_for_load=None, trainable=False):
     if type == 'mobilenet':
-        net = MobilenetNetwork({'image': placeholder_input}, conv_width=0.75, conv_width2=0.50)
+        net = MobilenetNetwork({'image': placeholder_input}, trainable=trainable, conv_width=0.75, conv_width2=0.50)
         pretrain_path = 'pretrained/mobilenet_v1_0.75_224_2017_06_14/mobilenet_v1_0.75_224.ckpt'
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_accurate':
-        net = MobilenetNetwork({'image': placeholder_input}, conv_width=1.00)
+        net = MobilenetNetwork({'image': placeholder_input}, trainable=trainable, conv_width=1.00)
         pretrain_path = 'pretrained/mobilenet_v1_1.0_224_2017_06_14/mobilenet_v1_1.0_224.ckpt'
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_fast':
-        net = MobilenetNetwork({'image': placeholder_input}, conv_width=0.50)
+        net = MobilenetNetwork({'image': placeholder_input}, trainable=trainable, conv_width=0.50)
         pretrain_path = 'pretrained/mobilenet_v1_0.50_224_2017_06_14/mobilenet_v1_0.50_224.ckpt'
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'cmu':

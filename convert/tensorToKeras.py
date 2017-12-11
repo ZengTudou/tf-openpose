@@ -76,15 +76,24 @@ def setLayer(model,layers):
         print("ln: ", ln[1])
         wn = []
         if isinstance(ln[1],list):
-            for name in ln[1]:
+            # batch_norm
+            # gamma
+            wn.append(layer_weights[0])
+
+            # 1.beta, 2.moving_mean, 3.variance
+            for i, name in enumerate(ln[1]):
                 ix = vnames.index(name)
                 v = variables[ix][1]
                 wn.append(v)
-
         else:
             ix = vnames.index(ln[1])
             v = variables[ix][1]
             wn.append(v)
+
+            if len(layer_weights) > 1:
+                for n in range(1,len(layer_weights)):
+                    # pointwise
+                    wn.append(layer_weights[n])
 
         layer.set_weights(wn)
 
@@ -110,7 +119,7 @@ def separable_conv(x, c_o, kernel,stride, name, relu=True):
         ,name=name+"_pointwise"
     )(x)
 
-    x = BatchNormalization(scale=False,name=name+'_bn')(x,training=True)
+    x = BatchNormalization(scale=True, name=name+'_bn')(x,training=False)
     if relu:
         x = Activation('relu', name=name+'_relu')(x)
     
@@ -143,7 +152,7 @@ def get_model(sess, height, width):
             , kernel_regularizer=l2(0.04)
             )(image)
     
-    x = BatchNormalization(scale=False, name='Conv2d_0_bn')(x,training=True)
+    x = BatchNormalization(scale=True, name='Conv2d_0_bn')(x,training=False)
     x = Activation('relu', name='Conv2d_0_relu')(x)
 
     x = separable_conv(x,depth(64),(3,3),1,name='Conv2d_1')
@@ -218,6 +227,8 @@ def get_model(sess, height, width):
             layers = getTupleLayer(prefix,layer)
             model = setLayer(model,layers)
     
+    if not os.path.exists("output"):
+        os.mkdir("output")
     model.save('output/predict.hd5')
 
     # plot_model(model, to_file='model_shape.png', show_shapes=True)
@@ -240,4 +251,5 @@ def run():
     with tf.Session(config=config) as sess:
         net = get_model(sess, args.input_height, args.input_width)
 
-run()
+if __name__ == "__main__":
+    run()
