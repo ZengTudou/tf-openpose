@@ -35,14 +35,16 @@ Pillow=4.3.0
   - [@mbotsu](https://github.com/mbotsu)
   - [@tnosho](https://github.com/tnosho)
 
-## Can not convert CoreML
-
+## How to convert to CoreML
+CoreML doesn't support instance_normalization.
+And [tf-openpose-weight](https://www.dropbox.com/s/09xivpuboecge56/mobilenet_0.75_0.50_model-388003.zip?dl=0) that you can download from [original repository](https://github.com/ildoonet/tf-openpose) is trained with instance_normalization.
+So, if you would like to convert to CoreML, you have to retrain without instance_normalization.([See this commit](https://github.com/infocom-tpo/tf-openpose/commit/2c6484888f6035054b897ddc35cbcc257f1c1cdf))
 - tf-openpose .. BatchNormalization: instance_normalization supported
 - coreml .. instance_normalization not supported
 
 [Instance normalization removed in 0.4.0](https://forums.developer.apple.com/thread/81520)
 
-**Relearning or coreml instance_normalization Waiting for support**
+**Retraining or coreml instance_normalization Waiting for support**
 
 ![batch_normalization](resources/batch_normalization.png)
 
