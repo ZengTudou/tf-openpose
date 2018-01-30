@@ -41,6 +41,7 @@ def get_variables(model_path, height , width):
 
 # Load Trained Weights
 tf_model_path = './models/model-388003' # includes model-388003.index, model-388003.meta, model-388003.data-00000-of-00001
+tf_model_path = './models/model_final-365221' # includes model-388003.index, model-388003.meta, model-388003.data-00000-of-00001
 variables = get_variables(tf_model_path, args.input_height, args.input_width)
 
 def getTupleLayer(prefix,name):
@@ -168,19 +169,18 @@ def get_model(sess, height, width):
     o11 = separable_conv(x,depth(512),(3,3),1,name='Conv2d_11')
     
     o3_pool = MaxPooling2D((2, 2),(2, 2),padding='same')(o3)
-    feat_concat1 = concatenate([o3_pool,o7,o11], axis=3)
-    feat_concat2 = concatenate([o3_pool,o7,o11], axis=3)
+    feat_concat = concatenate([o3_pool,o7,o11], axis=3)
 
     prefix = 'MConv_Stage1'
 
-    r1 = separable_conv(feat_concat1,depth2(128),(3,3),1,name=prefix + '_L1_1')
+    r1 = separable_conv(feat_concat,depth2(128),(3,3),1,name=prefix + '_L1_1')
     r1 = separable_conv(r1,depth2(128),(3,3),1,name=prefix + '_L1_2')
     r1 = separable_conv(r1,depth2(128),(3,3),1,name=prefix + '_L1_3')
     r1 = separable_conv(r1,depth2(512),(1,1),1,name=prefix + '_L1_4')
     r1 = separable_conv(r1,38,(1,1),1,relu=False,name=prefix + '_L1_5')
 
     # concat = Input(shape=(46, 46, 864))
-    r2 = separable_conv(feat_concat2,depth2(128),(3,3),1,name=prefix + '_L2_1')
+    r2 = separable_conv(feat_concat,depth2(128),(3,3),1,name=prefix + '_L2_1')
     r2 = separable_conv(r2,depth2(128),(3,3),1,name=prefix + '_L2_2')
     r2 = separable_conv(r2,depth2(128),(3,3),1,name=prefix + '_L2_3')
     r2 = separable_conv(r2,depth2(512),(1,1),1,name=prefix + '_L2_4')
@@ -188,16 +188,15 @@ def get_model(sess, height, width):
     
     for stage_id in range(5):
         prefix = 'MConv_Stage%d' % (stage_id + 2)
-        cc1 = concatenate([r1,r2,feat_concat1], axis=3)
-        cc2 = concatenate([r1,r2,feat_concat2], axis=3)
+        cc = concatenate([r1,r2,feat_concat], axis=3)
 
-        r1 = separable_conv(cc1,depth2(128),(3,3),1,name=prefix + '_L1_1')
+        r1 = separable_conv(cc,depth2(128),(3,3),1,name=prefix + '_L1_1')
         r1 = separable_conv(r1,depth2(128),(3,3),1,name=prefix + '_L1_2')
         r1 = separable_conv(r1,depth2(128),(3,3),1,name=prefix + '_L1_3')
         r1 = separable_conv(r1,depth2(128),(1,1),1,name=prefix + '_L1_4')
         r1 = separable_conv(r1,38,(1,1),1,relu=False,name=prefix + '_L1_5')
         
-        r2 = separable_conv(cc2,depth2(128),(3,3),1,name=prefix + '_L2_1')
+        r2 = separable_conv(cc,depth2(128),(3,3),1,name=prefix + '_L2_1')
         r2 = separable_conv(r2,depth2(128),(3,3),1,name=prefix + '_L2_2')
         r2 = separable_conv(r2,depth2(128),(3,3),1,name=prefix + '_L2_3')
         r2 = separable_conv(r2,depth2(128),(1,1),1,name=prefix + '_L2_4')
