@@ -41,7 +41,7 @@ def get_variables(model_path, height , width):
 
 # Load Trained Weights
 tf_model_path = './models/model-388003' # includes model-388003.index, model-388003.meta, model-388003.data-00000-of-00001
-tf_model_path = './models/model_final-365221' # includes model-388003.index, model-388003.meta, model-388003.data-00000-of-00001
+# tf_model_path = './models/model_final-365221' # includes model-388003.index, model-388003.meta, model-388003.data-00000-of-00001
 variables = get_variables(tf_model_path, args.input_height, args.input_width)
 
 def getTupleLayer(prefix,name):
